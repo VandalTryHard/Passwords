@@ -39,45 +39,61 @@ def main():
         print("3) Display all User IDs")
         print("4) Quit")
         user_choice = input("Enter: ")
+        filePasswords = open("passwords.csv", "a")
+        filePasswords.close()
         if user_choice == "1":
             newID, newUserName, newPassword = createNew()
-            examination(newID, newUserName, newPassword)
+            examinationID(newID)
+            newUser(newID, newUserName, newPassword)
         # elif user_choice == "2":
         #     changePass()
-        # elif user_choice == "3":
-        #     displayID()
+        elif user_choice == "3":
+            displayID()
         elif user_choice == "4":
             quit()
         else:
             print("Error. Try again!")
 
+#1
 def createNew():
     newID = input("Enter new ID: ")
     newUserName = input("Enter username: ")
     newPassword = input("Enter password: ")
-    filePasswords = open("passwords.csv", "a")
-    filePasswords.close()
     newUser = newID, newUserName, newPassword
     return newUser
 
-def examination(newID, newUserName, newPassword):
+def examinationID(newID): #Проверка на входимость в список
     filePasswords = open("passwords.csv", "r")
     search = newID
-    csv.reader(filePasswords)
     for row in filePasswords:
         if search in str(row):
             print("This ID is already taken.")
-        else:
-            filePasswords = open("passwords.csv", "a")
-            newUser = newID + ", " + newUserName + ", " + newPassword
-            filePasswords.write(str(newUser))
             filePasswords.close()
+            main()
 
+def newUser(newID, newUserName, newPassword):
+    filePasswords = open("passwords.csv", "a")
+    newUser = newID + ", " + newUserName + ", " + newPassword + "\n"
+    filePasswords.write(str(newUser))
+    filePasswords.close()
 
-
-
+# #2
 # def changePass():
-
-# def displayID():
+#     filePasswords = open("passwords.csv", "r")
+#     for row in filePasswords:
+#         print(row)
+#     filePasswords.close()
+#     changePassUser = input("Enter ID for change password: ")
+#     change = []
+#     for changePassUser in filePasswords:
+#         change.append(changePassUser)
+#         print(change)
+#     print(change)
+#3
+def displayID():
+    filePasswords = open("passwords.csv", "r")
+    reader = csv.reader(filePasswords)
+    for row in reader:
+        print(row)
 
 main()
