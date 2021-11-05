@@ -44,9 +44,10 @@ def main():
         if user_choice == "1":
             newID, newUserName, newPassword = createNew()
             examinationID(newID)
+            passStrength(newPassword)
             newUser(newID, newUserName, newPassword)
-        # elif user_choice == "2":
-        #     changePass()
+        elif user_choice == "2":
+            changePass()
         elif user_choice == "3":
             displayID()
         elif user_choice == "4":
@@ -66,29 +67,63 @@ def examinationID(newID): #Проверка на входимость в спи�
     filePasswords = open("passwords.csv", "r")
     search = newID
     for row in filePasswords:
-        if search in str(row):
-            print("This ID is already taken.")
+        if search in str(row[0]):
+            print("This ID is already taken.\n")
             filePasswords.close()
             main()
 
-def newUser(newID, newUserName, newPassword):
+def newUser(newID, newUserName, newPassword): # Запись нового user
     filePasswords = open("passwords.csv", "a")
     newUser = newID + ", " + newUserName + ", " + newPassword + "\n"
     filePasswords.write(str(newUser))
     filePasswords.close()
 
-# #2
-# def changePass():
-#     filePasswords = open("passwords.csv", "r")
-#     for row in filePasswords:
-#         print(row)
-#     filePasswords.close()
-#     changePassUser = input("Enter ID for change password: ")
-#     change = []
-#     for changePassUser in filePasswords:
-#         change.append(changePassUser)
-#         print(change)
-#     print(change)
+#Проверка пароля на надежность Password check for strength 
+def passStrength(newPassword):
+    exam1 = "0123456789"
+    exam2 = "abcdefghijklmnopqrstuvwxyz"
+    exam3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    exam4 = "!£$%&<*@"
+    exam1 = set(exam1, exam2, exam3, exam4)
+    password = set(newPassword)
+    password1 = len(newPassword)
+    if password1 > 8 and password in exam1:
+        print("ok")
+    else:
+        print("Error\n")
+        main()
+
+#2
+def changePass():
+    filePasswords = csv.reader(open("passwords.csv"))
+    rows = list(filePasswords)
+    changePassUser = int(input("Enter ID for change password: "))
+    try:
+        row = rows[changePassUser-1]
+    except IndexError:
+        print("The specified ID was not found. ")
+        main()
+    print(row)
+    newPassword = input("Сhange Password (y/n): ")
+    if newPassword == "y":
+        newPassword = input("Enter new password: ")
+        passStrength(newPassword)
+        rows[changePassUser-1][2] =" " + newPassword
+        writer = csv.writer(open("passwords.csv", "w", newline=""))
+        writer.writerows(rows)
+    else:
+        main()
+    # filePasswords = open("passwords.csv", "r")
+    # for row in filePasswords:
+    #     print(row)
+    # changePassUser = input("Enter ID for change password: ")
+    # filePasswords = list(csv.reader(open("passwords.csv")))
+    # change = []
+    # for changePassUser in filePasswords:
+    #     change.append(changePassUser)
+    #     print(change)
+    # print(change)
+
 #3
 def displayID():
     filePasswords = open("passwords.csv", "r")
