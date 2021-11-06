@@ -30,6 +30,7 @@ Enter Selection:
 Наконец, при выборе пункта 4 программа должна завершиться."""
 
 import csv
+import re
 
 def main():
     start = True
@@ -80,18 +81,19 @@ def newUser(newID, newUserName, newPassword): # Запись нового user
 
 #Проверка пароля на надежность Password check for strength 
 def passStrength(newPassword):
-    exam1 = "0123456789"
-    exam2 = "abcdefghijklmnopqrstuvwxyz"
-    exam3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    exam4 = "!£$%&<*@"
-    exam1 = set(exam1, exam2, exam3, exam4)
-    password = set(newPassword)
-    password1 = len(newPassword)
-    if password1 > 8 and password in exam1:
-        print("ok")
-    else:
-        print("Error\n")
-        main()
+    while True:
+        password = newPassword
+        if len(password) < 8 or re.search('[0-9]',password) is None or re.search('[A-Z]',password) is None \
+            or re.search('[a-z]',password) is None or re.search('[!£$%&<*@]',password) is None:
+            print("""The password must contain at least 8 characters;
+            the password must include uppercase letters;
+            the password must include lowercase letters;
+            the password must include numbers;
+            the password must include at least one special character:!, £, $,%, &, <, *, or @. \n""")
+            main()
+        else:
+            print("Your password seems fine")
+            break
 
 #2
 def changePass():
